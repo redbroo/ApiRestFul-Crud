@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.0.2/dist/sweetalert2.min.css">  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <style>
+  #app{
+      background-color:#686868;      
+    }
+    </style>
+    </head>
+    <body>
+      <div id="app">
+
+      <v-card flat>
+        <v-container fluid>
+          <v-row class="child-flex">
+            <div>
+              <v-toolbar>
+                <v-btn
+                  icon
+                  class="hidden-xs-only"
+                >
+                  <v-icon>mdi-arrow-left</v-icon>
+                </v-btn>
+    
+                <v-toolbar-title>Buscar</v-toolbar-title>
+    
+                <v-spacer></v-spacer>
+    
+                <v-btn
+                  icon
+                  class="hidden-xs-only"
+                >
+                  <v-icon>mdi-magnify</v-icon>
+                </v-btn>
+              </v-toolbar>
+            </div>
+            <div style="flex-basis: 20%">
+              <v-toolbar dark>
+                <v-spacer></v-spacer>
+                <v-btn icon>
+                  <v-icon>mdi-reply</v-icon>
+                </v-btn>
+                <v-btn icon>
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </v-toolbar>
+            </div>
+          </v-row>
+        </v-container>
+      </v-card>
+        <v-app>
+            <v-main>
+                <v-card class="mx-auto mt-5" color="transparent" max-width="1280" elevation="0">            
+                <v-btn class="mx-2" fab dark color="#fa0202" @click="formNuevo()"><v-icon dark>mdi-plus</v-icon></v-btn>
+                </v-card>
+                <v-simple-table class="mt-5">
+                    <template v-slot:default>
+                        <thead>
+                            <tr class="blue-grey darken-2">
+                                <th class="white--text">ID</th>
+                                <th class="white--text">DESCRIPCIÓN</th>
+                                <th class="white--text">PRECIO</th>
+                                <th class="white--text">STOCK</th>
+                                <th class="white--text text-center">ACCIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="guitarra in guitarras" :key="guitarra.id">
+                            <td>{{ guitarra.id }}</td>
+                            <td>{{ guitarra.descripcion }}</td>
+                            <td>{{ guitarra.precio }}</td>
+                            <td>{{ guitarra.stock }}</td>
+                            <td>
+                                <v-btn class="pink" dark small fab  @click="formEditar(guitarra.id, guitarra.descripcion, guitarra.precio, guitarra.stock)"><v-icon>mdi-pencil</v-icon></v-btn>
+                                <v-btn class="error" fab dark small @click="borrar(guitarra.id)"><v-icon>mdi-delete</v-icon></v-btn>
+                            </td>
+                            </tr>
+                        </tbody>
+                    </template>
+                </v-simple-table>
+                </v-card>
+                <!-- Componente de Diálogo para CREAR y EDITAR -->
+                <v-dialog v-model="dialog" max-width="500">        
+                    <v-card>
+                        <v-card-title class="grey darken-4 white--text">Artículo</v-card-title>    
+                        <v-card-text>
+                            <v-form>             
+                                <v-container>
+                                  <v-row>
+                                    <input v-model="guitarra.id" hidden></input>
+                                    <v-col cols="12" md="4">
+                                      <v-text-field v-model="guitarra.descripcion" label="Descripción" solo required>{{guitarra.descripcion}}</v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" md="4">
+                                      <v-text-field v-model="guitarra.precio" label="Precio" type="number" prefix="$" solo required></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" md="4">
+                                      <v-text-field v-model="guitarra.stock" label="Stock" type="number" solo required></v-text-field>
+                                    </v-col>
+                                  </v-row>
+                                </v-container>            
+                            </v-card-text>
+                        <v-card-actions>
+                            <v-btn @click="dialog=false" color="blue-grey" dark>Cancelar</v-btn>
+                            <v-btn @click="guardar()" type="submit" color="black accent-3" dark>Guardar</v-btn>
+                        </v-card-actions>
+                    </v-form>
+                    </v-card>
+                </v-dialog>
+            </v-main>
+            <template>
+              <v-container fluid>
+                <v-row justify="space-around">
+                  <v-col cols="5">
+                    <div class="text-h6 mb-1">
+                      Guitarra Takamine
+                    </div>
+                    <div class="subheading">
+                      $15.000 pesos
+                    </div>
+                    <v-img
+                      src="img/1.jpg"
+                      aspect-ratio="1.7"
+                    ></v-img>
+                  
+                   Guitarra Fender
+                    </div>
+                    <div class="subheading">
+                      $10.000 pesos
+                    </div>
+                    <v-img
+                      src="img/2.jpg"
+                      aspect-ratio="1.7"
+                    ></v-img>
+                    
+                      <div class="text-h6 mb-1">
+                        Bateria Yamaha
+                         </div>
+                         <div class="subheading">
+                           $30.000 pesos
+                    </div>
+                    <v-img
+                      src="img/6.jpg"
+                      aspect-ratio="1.7"
+                    ></v-img>
+                  </v-col>
+            
+                  <v-col cols="5">
+                    <div class="text-h6 mb-1">
+                      Guitarra Ibanez
+                    </div>
+                    <div class="subheading">
+                      $10.000 pesos
+                    </div>
+                    <v-img
+                      src="img/3.jpg"
+                      aspect-ratio="1.7"
+                      contain
+                    ></v-img>
+                    <div class="text-h6 mb-1">
+                      Guitarra Taylor
+                    </div>
+                    <div class="subheading">
+                      $20.000 pesos
+                    
+                    </div>
+                    <v-img
+                      src="img/4.jpg"
+                      aspect-ratio="1.7"
+                      contain
+                    ></v-img>
+                    Acordeon Honer
+                    </div>
+                    <div class="subheading">
+                      $16.000 pesos
+                    </div>
+                    <v-img
+                      src="img/5.jpg"
+                      aspect-ratio="1.7"
+                      contain
+                    ></v-img>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </template>
+        </v-app>
+    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.js" integrity="sha512-nqIFZC8560+CqHgXKez61MI0f9XSTKLkm0zFVm/99Wt0jSTZ7yeeYwbzyl0SGn/s8Mulbdw+ScCG41hmO2+FKw==" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.0.2/dist/sweetalert2.all.min.js"></script>
+  <script>
+    let url = 'http://localhost:7000/api/guitarras/';
+    new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
+       data() {
+        return {            
+            guitarras: [],
+            dialog: false,
+            operacion: '',            
+            guitarra:{
+                id: null,
+                descripcion:'',
+                precio:'',
+                stock:''
+            }          
+        }
+       },
+       created(){               
+            this.mostrar()
+       },  
+       methods:{          
+            //MÉTODOS PARA EL CRUD
+            mostrar:function(){
+              axios.get(url)
+              .then(response =>{
+                this.guitarras = response.data;                   
+              })
+            },
+            crear:function(){
+                let parametros = {descripcion:this.guitarra.descripcion, precio:this.guitarra.precio,stock:this.guitarra.stock };                
+                axios.post(url, parametros)
+                .then(response =>{
+                  this.mostrar();
+                });     
+                this.guitarra.descripcion="";
+                this.guitarra.precio="";
+                this.guitarra.stock="";
+            },                        
+            editar: function(){
+            let parametros = {descripcion:this.guitarra.descripcion, precio:this.guitarra.precio, stock:this.guitarra.stock, id:this.guitarra.id};                            
+            //console.log(parametros);                   
+                 axios.put(url+this.guitarra.id, parametros)                            
+                  .then(response => {                                
+                     this.mostrar();
+                  })                
+                  .catch(error => {
+                      console.log(error);            
+                  });
+            },
+            borrar:function(id){
+             Swal.fire({
+                title: '¿Confirma eliminar el registro?',   
+                confirmButtonText: `Confirmar`,                  
+                showCancelButton: true,                          
+              }).then((result) => {                
+                if (result.isConfirmed) {      
+                      //procedimiento borrar
+                      axios.delete(url+id)
+                      .then(response =>{           
+                          this.mostrar();
+                       });      
+                      Swal.fire('¡Eliminado!', '', 'success')
+                } else if (result.isDenied) {                  
+                }
+              });              
+            },
+
+            //Botones y formularios
+            guardar:function(){
+              if(this.operacion=='crear'){
+                this.crear();                
+              }
+              if(this.operacion=='editar'){ 
+                this.editar();                           
+              }
+              this.dialog=false;                        
+            }, 
+            formNuevo:function () {
+              this.dialog=true;
+              this.operacion='crear';
+              this.guitarra.descripcion='';                           
+              this.guitarra.precio='';
+              this.guitarra.stock='';
+            },
+            formEditar:function(id, descripcion, precio, stock){              
+              this.guitarra.id = id;
+              this.guitarra.descripcion = descripcion;                            
+              this.guitarra.precio = precio;
+              this.guitarra.stock = stock;                      
+              this.dialog=true;                            
+              this.operacion='editar';
+            }
+       }      
+    });
+  </script>
+</body>
+</html> 
